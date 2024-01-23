@@ -43,7 +43,7 @@ parts:
       - -Dmachine=haswell
       - -Ddefault_library=static
     override-build: |
-      craftctl default
+      snapcraftctl build
     prime:
       - usr/local/lib/x86_64-linux-gnu/*.so
       - usr/local/bin/cndpfwd
@@ -74,7 +74,7 @@ parts:
       - protobuf-compiler-grpc
       - python3
     override-pull: |
-      craftctl default
+      snapcraftctl pull
       for file in ${CRAFT_PROJECT_DIR}/local/patches/*
       do
         patch -i $file -p 1
@@ -153,7 +153,7 @@ parts:
     stage-packages:
       - python3-venv
     override-build: |
-      craftctl default
+      snapcraftctl build
       ln -srf $CRAFT_PART_INSTALL/bin/python3 $CRAFT_PART_INSTALL/bin/python
 
   config:

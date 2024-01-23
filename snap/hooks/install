@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+# Create config file
+cp "$SNAP/opt/bess/bessctl/conf/upf.json" "$SNAP_COMMON/upf.json"

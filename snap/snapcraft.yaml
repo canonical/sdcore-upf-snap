@@ -4,8 +4,14 @@ version: '1.3'
 summary: SD-Core User Plane Function
 description: SD-Core User Plane Function
 
-grade: devel
+grade: stable
 confinement: devmode
+
+apps:
+  bessd:
+    daemon: simple
+    install-mode: disable
+    command: bin/bessd-start
 
 parts:
   xdp:
@@ -166,13 +172,6 @@ parts:
     organize:
       "*": opt/bess/bessctl/conf/
 
-  pfcpiface:
-    plugin: go
-    source: https://github.com/omec-project/upf.git
-    source-commit: 57860858a17088d06c6bc0def9fcd6e6697a1e98
-    build-snaps:
-      - go
-    stage-packages:
-      - libc6
-    prime:
-      - -bin/p4info_code_gen
+  service-files:
+    plugin: dump
+    source: service

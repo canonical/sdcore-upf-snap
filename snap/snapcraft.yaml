@@ -75,7 +75,7 @@ parts:
       - python3
     override-pull: |
       snapcraftctl pull
-      for file in ${CRAFT_PROJECT_DIR}/local/patches/*
+      for file in ${SNAPCRAFT_PROJECT_DIR}/local/patches/*
       do
         patch -i $file -p 1
       done
@@ -156,7 +156,7 @@ parts:
       snapcraftctl build
       ln -srf $CRAFT_PART_INSTALL/bin/python3 $CRAFT_PART_INSTALL/bin/python
 
-  config:
+  bess-config:
     plugin: dump
     after:
       - bess
@@ -165,3 +165,14 @@ parts:
     source-subdir: conf
     organize:
       "*": opt/bess/bessctl/conf/
+
+  pfcpiface:
+    plugin: go
+    source: https://github.com/omec-project/upf.git
+    source-commit: 57860858a17088d06c6bc0def9fcd6e6697a1e98
+    build-snaps:
+      - go
+    stage-packages:
+      - libc6_libs
+    prime:
+      - -bin/p4info_code_gen

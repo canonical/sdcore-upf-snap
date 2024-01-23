@@ -129,12 +129,12 @@ parts:
         protoc "$file" --proto_path=protobuf --python_out=pybess/builtin_pb --grpc_out=pybess/builtin_pb --plugin=protoc-gen-grpc=$(which grpc_python_plugin)
       done
       make -C core bessd modules
-      mkdir -p $CRAFT_PART_INSTALL/bin
-      cp bin/bessd $CRAFT_PART_INSTALL/bin/bessd
-      mkdir -p $CRAFT_PART_INSTALL/opt/bess/bessctl
-      mkdir -p $CRAFT_PART_INSTALL/opt/bess/pybess
-      cp -r bessctl/* $CRAFT_PART_INSTALL/opt/bess/bessctl/
-      cp -r pybess/* $CRAFT_PART_INSTALL/opt/bess/pybess/
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp bin/bessd $SNAPCRAFT_PART_INSTALL/bin/bessd
+      mkdir -p $SNAPCRAFT_PART_INSTALL/opt/bess/bessctl
+      mkdir -p $SNAPCRAFT_PART_INSTALL/opt/bess/pybess
+      cp -r bessctl/* $SNAPCRAFT_PART_INSTALL/opt/bess/bessctl/
+      cp -r pybess/* $SNAPCRAFT_PART_INSTALL/opt/bess/pybess/
 
   bess-python-deps:
     plugin: python
@@ -154,7 +154,7 @@ parts:
       - python3-venv
     override-build: |
       snapcraftctl build
-      ln -srf $CRAFT_PART_INSTALL/bin/python3 $CRAFT_PART_INSTALL/bin/python
+      ln -srf $SNAPCRAFT_PART_INSTALL/bin/python3 $SNAPCRAFT_PART_INSTALL/bin/python
 
   bess-config:
     plugin: dump

@@ -1,0 +1,167 @@
+name: sdcore-upf
+base: core20
+version: '1.3'
+summary: SD-Core User Plane Function
+description: SD-Core User Plane Function
+
+grade: devel
+confinement: devmode
+
+parts:
+  xdp:
+    plugin: autotools
+    source: https://github.com/xdp-project/xdp-tools.git
+    source-tag: v1.2.2
+    build-packages:
+      - clang
+      - gcc-multilib
+      - libelf-dev
+      - libpcap-dev
+      - linux-headers-5.4.0-26
+      - llvm
+    prime:
+      - usr/local/lib/x86_64-linux-gnu/*.so
+      - usr/lib/libxdp*
+
+  cndp:
+    after:
+      - xdp
+    plugin: meson
+    source: https://github.com/CloudNativeDataPlane/cndp.git
+    source-commit: d5ce4b9edc2e7ddb46a61b395deffafaf11a0500
+    build-packages:
+      - clang
+      - golang
+      - libbpf-dev
+      - libbsd-dev
+      - libnl-3-dev
+      - libnl-cli-3-dev
+      - libnuma-dev
+      - lld
+    meson-parameters:
+      - -Dbuildtype=release
+      - -Dmachine=haswell
+      - -Ddefault_library=static
+    override-build: |
+      craftctl default
+    prime:
+      - usr/local/lib/x86_64-linux-gnu/*.so
+      - usr/local/bin/cndpfwd
+
+  dpdk:
+    plugin: meson
+    after:
+      - cndp
+    source: https://fast.dpdk.org/rel/dpdk-20.11.3.tar.gz
+    source-type: tar
+    build-packages:
+      - ca-certificates
+      - libbenchmark-dev
+      - libbpf0
+      - libc-ares-dev
+      - libelf-dev
+      - libgflags2.2
+      - libgoogle-glog-dev
+      - libgrpc++-dev
+      - libgtest-dev
+      - libjson-c-dev
+      - libnuma-dev
+      - libpcap-dev
+      - libprotobuf-dev
+      - libunwind-dev
+      - meson
+      - protobuf-compiler
+      - protobuf-compiler-grpc
+      - python3
+    override-pull: |
+      craftctl default
+      for file in ${CRAFT_PROJECT_DIR}/local/patches/*
+      do
+        patch -i $file -p 1
+      done
+    meson-parameters:
+      - --buildtype=debugoptimized
+      - -Dmachine=haswell
+    prime:
+      - usr/local/lib/x86_64-linux-gnu/*.so
+
+  bess:
+    plugin: nil
+    after:
+      - dpdk
+    source: https://github.com/omec-project/bess.git
+    source-tag: dpdk-2011-focal
+    source-type: git
+    build-packages:
+      - ca-certificates
+      - libbenchmark-dev
+      - libbpf0
+      - libc-ares-dev
+      - libelf-dev
+      - libgflags2.2
+      - libgoogle-glog-dev
+      - libgrpc++-dev
+      - libgtest-dev
+      - libjson-c-dev
+      - libnuma-dev
+      - libpcap-dev
+      - libprotobuf-dev
+      - libssl-dev
+      - libunwind-dev
+      - meson
+      - pkg-config
+      - protobuf-compiler
+      - protobuf-compiler-grpc
+      - python3
+    stage-packages:
+      - libbpf0
+      - libgflags2.2
+      - libjson-c4
+      - libgraph-easy-perl
+      - iproute2
+      - iptables
+      - iputils-ping
+      - tcpdump
+      - ethtool
+    override-build: |
+      for file in $(find ./protobuf -name *.proto -print)
+      do
+        protoc "$file" --proto_path=protobuf --python_out=pybess/builtin_pb --grpc_out=pybess/builtin_pb --plugin=protoc-gen-grpc=$(which grpc_python_plugin)
+      done
+      make -C core bessd modules
+      mkdir -p $CRAFT_PART_INSTALL/bin
+      cp bin/bessd $CRAFT_PART_INSTALL/bin/bessd
+      mkdir -p $CRAFT_PART_INSTALL/opt/bess/bessctl
+      mkdir -p $CRAFT_PART_INSTALL/opt/bess/pybess
+      cp -r bessctl/* $CRAFT_PART_INSTALL/opt/bess/bessctl/
+      cp -r pybess/* $CRAFT_PART_INSTALL/opt/bess/pybess/
+
+  bess-python-deps:
+    plugin: python
+    after:
+      - bess
+    source: .
+    python-packages:
+      - flask
+      - grpcio
+      - iptools
+      - mitogen
+      - protobuf==3.20.0
+      - psutil
+      - pyroute2
+      - scapy
+    stage-packages:
+      - python3-venv
+    override-build: |
+      craftctl default
+      ln -srf $CRAFT_PART_INSTALL/bin/python3 $CRAFT_PART_INSTALL/bin/python
+
+  config:
+    plugin: dump
+    after:
+      - bess
+    source: https://github.com/omec-project/upf.git
+    source-commit: 7018518c17a073f155200f05ac4fd77c9ff72d21
+    source-subdir: conf
+    organize:
+      "*": opt/bess/bessctl/conf/

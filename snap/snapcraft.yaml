@@ -173,6 +173,6 @@ parts:
     build-snaps:
       - go
     stage-packages:
-      - libc6_libs
+      - libc6
     prime:
       - -bin/p4info_code_gen

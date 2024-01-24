@@ -21,6 +21,7 @@ Start the services:
 ```bash
 sudo snap start sdcore-upf.bessd
 sudo snap start sdcore-upf.routectl
+sudo snap start sdcore-upf.pfcpiface
 ```
 
 ### Observe
@@ -30,4 +31,5 @@ Read the logs:
 ```bash
 journalctl -b --no-pager -u snap.sdcore-upf.bessd.service -f
 journalctl -b --no-pager -u snap.sdcore-upf.routectl.service -f
+journalctl -b --no-pager -u snap.sdcore-upf.pfcpiface.service -f
 ```

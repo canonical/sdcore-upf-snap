@@ -16,6 +16,10 @@ apps:
     daemon: simple
     install-mode: disable
     command: bin/routectl-start
+  pfcpiface:
+    daemon: simple
+    install-mode: disable
+    command: bin/pfcpiface-start
 
 parts:
   xdp:
@@ -188,3 +192,12 @@ parts:
   service-files:
     plugin: dump
     source: service
+
+  pfcpiface:
+    plugin: go
+    source: https://github.com/omec-project/upf.git
+    source-commit: 57860858a17088d06c6bc0def9fcd6e6697a1e98
+    build-snaps:
+      - go
+    prime:
+      - -bin/p4info_code_gen

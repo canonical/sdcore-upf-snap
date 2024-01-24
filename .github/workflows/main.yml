@@ -19,11 +19,39 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build snap locally
-        uses: snapcore/action-build@v1
+        uses: snapcore/action-build@v1.2.0
         id: snapcraft
-
+      
       - name: Upload locally built snap artifact
         uses: actions/upload-artifact@v4
         with:
-          name: local-${{ steps.snapcraft.outputs.snap }}
+          name: snap
           path: ${{ steps.snapcraft.outputs.snap }}
+
+  publish:
+    name: Snap publish
+    if: ${{ github.ref_name == 'main' }}
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Downloads locally built snap artifact
+        uses: actions/download-artifact@v4
+        id: download
+        with:
+          name: snap
+
+      - name: Determine snap file name
+        id: find-snap
+        run: |
+          SNAP_FILE=$(ls *.snap)
+          echo "Found snap file: $SNAP_FILE"
+          echo "snap_file=${SNAP_FILE}" >>$GITHUB_OUTPUT
+
+      - name: publish snap
+        uses: snapcore/action-publish@v1.2.0
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        with:
+          snap: ${{ steps.find-snap.outputs.snap_file }}
+          release: edge

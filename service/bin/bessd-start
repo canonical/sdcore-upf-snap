@@ -5,4 +5,5 @@ set -ex
 
 export PYTHONPATH="$SNAP/opt/bess/:$PYTHONPATH"
 export CONF_FILE="$SNAP_COMMON/upf.json"
+
 $SNAP/bin/bessd -f -grpc-url=0.0.0.0:10514 -m 0

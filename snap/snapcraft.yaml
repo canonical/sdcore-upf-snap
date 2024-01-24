@@ -5,13 +5,17 @@ summary: SD-Core User Plane Function
 description: SD-Core User Plane Function
 
 grade: stable
-confinement: devmode
+confinement: classic
 
 apps:
   bessd:
     daemon: simple
     install-mode: disable
     command: bin/bessd-start
+  routectl:
+    daemon: simple
+    install-mode: disable
+    command: bin/routectl-start
 
 parts:
   xdp:
@@ -161,16 +165,25 @@ parts:
     override-build: |
       snapcraftctl build
       ln -srf $SNAPCRAFT_PART_INSTALL/bin/python3 $SNAPCRAFT_PART_INSTALL/bin/python
+  
+  routectl:
+    plugin: dump
+    source: https://github.com/omec-project/upf.git
+    source-type: git
+    source-commit: 7018518c17a073f155200f05ac4fd77c9ff72d21
+    source-subdir: conf
+    stage-packages:
+      - jq
+    organize:
+      "route_control.py": opt/bess/bessctl/conf/route_control.py
 
   bess-config:
     plugin: dump
     after:
       - bess
-    source: https://github.com/omec-project/upf.git
-    source-commit: 7018518c17a073f155200f05ac4fd77c9ff72d21
-    source-subdir: conf
+    source: config
     organize:
-      "*": opt/bess/bessctl/conf/
+      "upf.json": opt/bess/bessctl/conf/upf.json
 
   service-files:
     plugin: dump

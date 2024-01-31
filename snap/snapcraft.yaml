@@ -1,11 +1,11 @@
 name: sdcore-upf
 base: core20
 version: '1.3'
-summary: SD-Core User Plane Function
-description: SD-Core User Plane Function
+summary: SD-Core UPF
+description: SD-Core User Plane Function (UPF)
 
 grade: stable
-confinement: classic
+confinement: devmode
 
 apps:
   bessd:

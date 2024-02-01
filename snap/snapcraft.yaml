@@ -7,19 +7,34 @@ description: SD-Core User Plane Function (UPF)
 grade: stable
 confinement: devmode
 
+plugs:
+  var-run:
+    interface: system-files
+    write:
+    - /var/run/bessd.pid
+    - /run/bessd.pid
+
 apps:
   bessd:
     daemon: simple
     install-mode: disable
     command: bin/bessd-start
+    plugs:
+      - var-run
+      - io-ports-control
+      - network-control
   routectl:
     daemon: simple
     install-mode: disable
     command: bin/routectl-start
+    plugs:
+      - network-bind
   pfcpiface:
     daemon: simple
     install-mode: disable
     command: bin/pfcpiface-start
+    plugs:
+      - network-bind
 
 parts:
   xdp:
@@ -89,10 +104,9 @@ parts:
       - python3
     override-pull: |
       snapcraftctl pull
-      for file in ${SNAPCRAFT_PROJECT_DIR}/local/patches/*
-      do
-        patch -i $file -p 1
-      done
+      patch -i ${SNAPCRAFT_PROJECT_DIR}/local/patches/0001-af_packet-Avoid-set-ioctl-if-there-is-no-flag-diff.patch -p 1
+      patch -i ${SNAPCRAFT_PROJECT_DIR}/local/patches/bpf_validate.patch -p 1
+      patch -i ${SNAPCRAFT_PROJECT_DIR}/local/patches/ethdev_include.patch -p 1
     meson-parameters:
       - --buildtype=debugoptimized
       - -Dmachine=haswell

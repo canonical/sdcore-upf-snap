@@ -6,7 +6,7 @@ A snap for the SD-Core User Plane Function.
 
 Install the snap:
 ```bash
-sudo snap install sdcore-upf
+sudo snap install sdcore-upf --devmode
 sudo snap connect sdcore-upf:network-control
 sudo snap connect sdcore-upf:io-ports-control
 sudo snap connect sdcore-upf:var-run

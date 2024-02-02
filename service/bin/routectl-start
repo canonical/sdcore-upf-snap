@@ -1,0 +1,12 @@
+#!/bin/bash
+# Copyright (C) 2024 Canonical Ltd
+
+set -ex
+
+export PYTHONPATH="$SNAP/opt/bess/:$PYTHONPATH"
+export PYTHONUNBUFFERED=1
+
+ACCESS_INTERFACE_NAME=$(jq -r '.access.ifname' $SNAP_COMMON/upf.json)
+CORE_INTERFACE_NAME=$(jq -r '.core.ifname' $SNAP_COMMON/upf.json)
+
+$SNAP/opt/bess/bessctl/conf/route_control.py -i $ACCESS_INTERFACE_NAME $CORE_INTERFACE_NAME

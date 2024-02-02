@@ -1,0 +1,5 @@
+#!/bin/bash
+# Copyright (C) 2024 Canonical Ltd
+
+export CONF_FILE="$SNAP_COMMON/upf.json"
+$SNAP/bin/pfcpiface -config $CONF_FILE

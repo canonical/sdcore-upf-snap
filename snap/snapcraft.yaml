@@ -24,6 +24,10 @@ apps:
     command: bin/pfcpiface-start
     plugs:
       - network-bind
+  bessctl:
+    command: opt/bess/bessctl/bessctl
+    environment:
+      CONF_FILE: /var/snap/sdcore-upf/common/upf.json
 
 parts:
   xdp:

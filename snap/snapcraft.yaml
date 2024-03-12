@@ -74,7 +74,7 @@ parts:
     plugin: meson
     after:
       - cndp
-    source: https://fast.dpdk.org/rel/dpdk-20.11.3.tar.gz
+    source: https://fast.dpdk.org/rel/dpdk-22.11.4.tar.gz
     source-type: tar
     build-packages:
       - ca-certificates
@@ -95,14 +95,17 @@ parts:
       - protobuf-compiler
       - protobuf-compiler-grpc
       - python3
+      - python3-pyelftools
+    meson-parameters:
+      - --buildtype=release
+      - -Denable_driver_sdk=true
+      - -Dmachine=haswell
     override-pull: |
       snapcraftctl pull
-      patch -i ${SNAPCRAFT_PROJECT_DIR}/local/patches/0001-af_packet-Avoid-set-ioctl-if-there-is-no-flag-diff.patch -p 1
-      patch -i ${SNAPCRAFT_PROJECT_DIR}/local/patches/bpf_validate.patch -p 1
-      patch -i ${SNAPCRAFT_PROJECT_DIR}/local/patches/ethdev_include.patch -p 1
-    meson-parameters:
-      - --buildtype=debugoptimized
-      - -Dmachine=haswell
+      for file in ${SNAPCRAFT_PROJECT_DIR}/local/patches/*
+      do
+        patch -i $file -p 1
+      done
     prime:
       - usr/local/lib/x86_64-linux-gnu/*.so
 
@@ -111,7 +114,7 @@ parts:
     after:
       - dpdk
     source: https://github.com/omec-project/bess.git
-    source-tag: dpdk-2011-focal
+    source-commit: dc7ef58702b3013a0b149b113340082dfbdca7cd
     source-type: git
     build-packages:
       - ca-certificates
@@ -149,7 +152,7 @@ parts:
       do
         protoc "$file" --proto_path=protobuf --python_out=pybess/builtin_pb --grpc_out=pybess/builtin_pb --plugin=protoc-gen-grpc=$(which grpc_python_plugin)
       done
-      make -C core bessd modules
+      make -j $(nproc) -C core bessd modules
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp bin/bessd $SNAPCRAFT_PART_INSTALL/bin/bessd
       mkdir -p $SNAPCRAFT_PART_INSTALL/opt/bess/bessctl

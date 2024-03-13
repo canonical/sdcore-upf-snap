@@ -179,7 +179,7 @@ parts:
     override-build: |
       snapcraftctl build
       ln -srf $SNAPCRAFT_PART_INSTALL/bin/python3 $SNAPCRAFT_PART_INSTALL/bin/python
-  
+
   routectl:
     plugin: dump
     source: https://github.com/omec-project/upf.git
@@ -197,7 +197,7 @@ parts:
       - bess
     source: config
     organize:
-      "upf.json": opt/bess/bessctl/conf/upf.json
+      "*": opt/bess/bessctl/conf/
 
   service-files:
     plugin: dump

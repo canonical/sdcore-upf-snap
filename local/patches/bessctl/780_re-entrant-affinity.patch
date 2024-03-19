@@ -1,0 +1,45 @@
+diff --git a/conf/up4.bess b/conf/up4.bess
+index 323f42b..52a02ac 100644
+--- a/conf/up4.bess
++++ b/conf/up4.bess
+@@ -7,6 +7,7 @@
+ from conf.gtp_echo import *
+ import conf.ports as port
+ import conf.sim as sim
++import os
+ import signal
+ 
+ port.setup_globals()
+@@ -99,7 +100,7 @@
+ 
+ 
+ # Initialize workers
+-cores = get_process_affinity()
++cores = list(range(os.cpu_count()))
+ workers = cores[:parser.workers]
+ if len(cores) > parser.workers:
+     nonworkers = cores[parser.workers:]
+diff --git a/conf/utils.py b/conf/utils.py
+index 49c2ea5..33cc6c5 100644
+--- a/conf/utils.py
++++ b/conf/utils.py
+@@ -39,7 +39,7 @@ def getpythonpid(process_name):
+ 
+ def get_json_conf(path, dump):
+     try:
+-        with open(path, 'r') as f:
++        with open(path, "r") as f:
+             jsonc_data = f.read()
+         jc = JsonComment()
+         conf = jc.loads(jsonc_data)
+@@ -128,10 +128,6 @@ def ip2long(ip):
+     return iptools.ipv4.ip2long(ip)
+ 
+ 
+-def get_process_affinity():
+-    return psutil.Process().cpu_affinity()
+-
+-
+ def set_process_affinity(pid, cpus):
+     psutil.Process(pid).cpu_affinity(cpus)
+ 

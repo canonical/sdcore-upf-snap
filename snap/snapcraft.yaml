@@ -12,6 +12,9 @@ apps:
     daemon: simple
     install-mode: disable
     command: bin/bessd-start
+    plugs:
+      - network-bind
+      - network-control
   routectl:
     daemon: simple
     install-mode: disable
@@ -102,7 +105,7 @@ parts:
       - -Dmachine=haswell
     override-pull: |
       snapcraftctl pull
-      for file in ${SNAPCRAFT_PROJECT_DIR}/local/patches/*
+      for file in ${SNAPCRAFT_PROJECT_DIR}/local/patches/dpdk/*
       do
         patch -i $file -p 1
       done
@@ -169,6 +172,7 @@ parts:
       - flask
       - grpcio
       - iptools
+      - jsoncomment
       - mitogen
       - protobuf==3.20.0
       - psutil
@@ -180,24 +184,21 @@ parts:
       snapcraftctl build
       ln -srf $SNAPCRAFT_PART_INSTALL/bin/python3 $SNAPCRAFT_PART_INSTALL/bin/python
 
-  routectl:
-    plugin: dump
-    source: https://github.com/omec-project/upf.git
-    source-type: git
-    source-commit: 7018518c17a073f155200f05ac4fd77c9ff72d21
-    source-subdir: conf
-    stage-packages:
-      - jq
-    organize:
-      "route_control.py": opt/bess/bessctl/conf/route_control.py
-
-  bess-config:
+  config:
     plugin: dump
     after:
       - bess
-    source: config
+    source: https://github.com/omec-project/upf.git
+    source-commit: e52a4f2a6ba53467aa9e13a36a473d680bd5c61a
+    source-subdir: conf
     organize:
       "*": opt/bess/bessctl/conf/
+    override-build: |
+      for file in ${SNAPCRAFT_PROJECT_DIR}/local/patches/bessctl/*
+      do
+        patch -i $file -p 1
+      done
+      snapcraftctl build
 
   service-files:
     plugin: dump

@@ -61,4 +61,4 @@ jobs:
         if: ${{ github.ref_name != 'main' }}
         with:
           snap: ${{ steps.find-snap.outputs.snap_file }}
-          release: edge/${{ github.ref_name }}
+          release: latest/edge/${{ github.ref_name }}

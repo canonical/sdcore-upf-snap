@@ -13,12 +13,6 @@ jobs:
     outputs:
       snap: ${{ steps.snapcraft.outputs.snap }}
     steps:
-      - name: Examine variables
-        id: vars
-        run: |
-          env | sort
-          echo =========================
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -64,7 +58,7 @@ jobs:
         uses: snapcore/action-publish@v1.2.0
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-        if: ${{ github.ref_name != 'main' }}
+        if: ${{ (github.ref_name != 'main') && (github.event_name == 'push') }}
         with:
           snap: ${{ steps.find-snap.outputs.snap_file }}
-          release: latest/edge/${{ github.head_ref }}
+          release: latest/edge/${{ github.ref_name }}

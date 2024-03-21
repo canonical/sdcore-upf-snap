@@ -1,4 +1,4 @@
 #!/bin/sh -e
 
-# Copy config file
-cp "$SNAP/opt/bess/bessctl/conf/upf.json" "$SNAP_COMMON/upf.json"
+# Copy config file (upstream has been renamed to .jsonc)
+cp "$SNAP/opt/bess/bessctl/conf/upf.jsonc" "$SNAP_COMMON/upf.json"

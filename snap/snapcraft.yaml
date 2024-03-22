@@ -13,7 +13,7 @@ apps:
     install-mode: disable
     command: bin/bessd-start
     environment:
-      LD_LIBRARY_PATH: "/usr/local/lib/x86_64-linux-gnu:/usr/local/lib"
+      LD_LIBRARY_PATH: "$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/local/lib/x86_64-linux-gnu:$SNAP/usr/local/lib"
     plugs:
       - network-bind
       - network-control
@@ -33,7 +33,7 @@ apps:
     command: opt/bess/bessctl/bessctl
     environment:
       CONF_FILE: /var/snap/sdcore-upf/common/upf.json
-      LD_LIBRARY_PATH: "/usr/local/lib/x86_64-linux-gnu:/usr/local/lib"
+      LD_LIBRARY_PATH: "$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/local/lib/x86_64-linux-gnu:$SNAP/usr/local/lib"
 
 parts:
   xdp:

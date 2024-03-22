@@ -148,6 +148,7 @@ parts:
       - iproute2
       - iptables
       - iputils-ping
+      - jq
       - tcpdump
       - ethtool
     override-build: |

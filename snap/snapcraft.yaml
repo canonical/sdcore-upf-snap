@@ -148,6 +148,7 @@ parts:
       - iproute2
       - iptables
       - iputils-ping
+      - jq
       - tcpdump
       - ethtool
     override-build: |
@@ -191,8 +192,6 @@ parts:
     source: https://github.com/omec-project/upf.git
     source-commit: e52a4f2a6ba53467aa9e13a36a473d680bd5c61a
     source-subdir: conf
-    stage-packages:
-      - jq
     organize:
       "*": opt/bess/bessctl/conf/
     override-build: |

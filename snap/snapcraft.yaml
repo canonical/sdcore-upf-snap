@@ -35,6 +35,10 @@ apps:
       CONF_FILE: /var/snap/sdcore-upf/common/upf.json
       LD_LIBRARY_PATH: "$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/local/lib/x86_64-linux-gnu:$SNAP/usr/local/lib"
 
+layout:
+  /usr/local/lib/x86_64-linux-gnu/dpdk/pmds-23.0:
+    bind: $SNAP/usr/local/lib/x86_64-linux-gnu/dpdk/pmds-23.0
+
 parts:
   xdp:
     plugin: autotools

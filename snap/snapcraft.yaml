@@ -1,5 +1,5 @@
 name: sdcore-upf
-base: core20
+base: core22
 version: '1.3'
 summary: SD-Core UPF
 description: SD-Core User Plane Function (UPF)
@@ -12,6 +12,8 @@ apps:
     daemon: simple
     install-mode: disable
     command: bin/bessd-start
+    environment:
+      LD_LIBRARY_PATH: "$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/local/lib/x86_64-linux-gnu:$SNAP/usr/local/lib"
     plugs:
       - network-bind
       - network-control
@@ -31,6 +33,11 @@ apps:
     command: opt/bess/bessctl/bessctl
     environment:
       CONF_FILE: /var/snap/sdcore-upf/common/upf.json
+      LD_LIBRARY_PATH: "$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/local/lib/x86_64-linux-gnu:$SNAP/usr/local/lib"
+
+layout:
+  /usr/local/lib/x86_64-linux-gnu/dpdk/pmds-23.0:
+    bind: $SNAP/usr/local/lib/x86_64-linux-gnu/dpdk/pmds-23.0
 
 parts:
   xdp:
@@ -42,11 +49,11 @@ parts:
       - gcc-multilib
       - libelf-dev
       - libpcap-dev
-      - linux-headers-5.4.0-26
+      - linux-headers-generic
+      - linux-libc-dev
       - llvm
     prime:
-      - usr/local/lib/x86_64-linux-gnu/*.so
-      - usr/lib/libxdp*
+      - usr/local/lib/x86_64-linux-gnu/*
 
   cndp:
     after:
@@ -66,11 +73,9 @@ parts:
     meson-parameters:
       - -Dbuildtype=release
       - -Dmachine=haswell
-      - -Ddefault_library=static
-    override-build: |
-      snapcraftctl build
+      - -Ddefault_library=both
     prime:
-      - usr/local/lib/x86_64-linux-gnu/*.so
+      - usr/local/lib/x86_64-linux-gnu/*
       - usr/local/bin/cndpfwd
 
   dpdk:
@@ -110,7 +115,7 @@ parts:
         patch -i $file -p 1
       done
     prime:
-      - usr/local/lib/x86_64-linux-gnu/*.so
+      - usr/local/lib/x86_64-linux-gnu/*
 
   bess:
     plugin: nil
@@ -141,16 +146,33 @@ parts:
       - protobuf-compiler-grpc
       - python3
     stage-packages:
+      - libatomic1
+      - libbenchmark1
       - libbpf0
+      - libbsd0
+      - libc-ares2
+      - libelf1
       - libgflags2.2
-      - libjson-c4
-      - libgraph-easy-perl
+      - libgoogle-glog0v5
+      - libgrpc++1
+      - libjson-c5
+      - libnl-3-200
+      - libnl-cli-3-200
+      - libnuma1
+      - libpcap0.8
+      - libprotobuf-c1
+      - libssl3
+      - libunwind8
       - iproute2
       - iptables
       - iputils-ping
       - jq
       - tcpdump
       - ethtool
+    build-environment:
+      - BESS_LINK_DYNAMIC: 1
+      - CPU: x86-64-v3
+      - CXXFLAGS: "-Wno-error=nonnull -Wno-error=maybe-uninitialized"
     override-build: |
       for file in $(find ./protobuf -name *.proto -print)
       do

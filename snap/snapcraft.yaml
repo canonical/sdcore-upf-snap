@@ -1,6 +1,6 @@
 name: sdcore-upf
 base: core22
-version: '1.3'
+version: '1.4.0'
 summary: SD-Core UPF
 description: SD-Core User Plane Function (UPF)
 
@@ -230,7 +230,7 @@ parts:
   pfcpiface:
     plugin: go
     source: https://github.com/omec-project/upf.git
-    source-commit: 57860858a17088d06c6bc0def9fcd6e6697a1e98
+    source-tag: v1.4.0
     build-snaps:
       - go
     prime:

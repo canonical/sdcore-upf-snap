@@ -212,7 +212,7 @@ parts:
     after:
       - bess
     source: https://github.com/omec-project/upf.git
-    source-commit: e52a4f2a6ba53467aa9e13a36a473d680bd5c61a
+    source-tag: v1.4.0
     source-subdir: conf
     organize:
       "*": opt/bess/bessctl/conf/

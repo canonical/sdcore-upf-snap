@@ -32,6 +32,7 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
+
       - name: Downloads locally built snap artifact
         uses: actions/download-artifact@v4
         id: download
@@ -52,7 +53,7 @@ jobs:
         if: ${{ github.ref_name == 'main' }}
         with:
           snap: ${{ steps.find-snap.outputs.snap_file }}
-          release: edge
+          release: 1.4/edge
 
       - name: Publish developer snap to branch
         uses: snapcore/action-publish@v1.2.0
@@ -61,4 +62,4 @@ jobs:
         if: ${{ (github.ref_name != 'main') && (github.event_name == 'push') }}
         with:
           snap: ${{ steps.find-snap.outputs.snap_file }}
-          release: latest/edge/${{ github.ref_name }}
+          release: 1.4/edge/${{ github.ref_name }}

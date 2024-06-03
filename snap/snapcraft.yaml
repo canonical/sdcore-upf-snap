@@ -1,11 +1,16 @@
 name: sdcore-upf
 base: core22
 version: '1.4.0'
-summary: SD-Core UPF
-description: SD-Core User Plane Function (UPF)
+summary: SD-Core User Plane Function (UPF)
+description: |
+  This project implements a 4G/5G User Plane Function (UPF) compliant with 3GPP TS23.501.
+  It follows the 3GPP Control and User Plane Separation (CUPS) architecture,
+  making use of the PFCP protocol for the communication between SMF (5G) / SPGW-C (4G) and UPF.
 
+icon: icon.svg
 grade: stable
 confinement: devmode
+license: Apache-2.0
 
 apps:
   bessd:

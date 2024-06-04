@@ -9,7 +9,7 @@ description: |
 
 icon: icon.svg
 grade: stable
-confinement: devmode
+confinement: classic
 license: Apache-2.0
 
 apps:

@@ -209,7 +209,7 @@ parts:
     stage-packages:
       - python3-venv
     override-build: |
-      snapcraftctl build
+      craftctl default
       ln -srf $SNAPCRAFT_PART_INSTALL/bin/python3 $SNAPCRAFT_PART_INSTALL/bin/python
 
   config:

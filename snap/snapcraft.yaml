@@ -159,6 +159,7 @@ parts:
       - libelf1
       - libgflags2.2
       - libgoogle-glog0v5
+      - libgraph-easy-perl
       - libgrpc++1
       - libjson-c5
       - libnl-3-200

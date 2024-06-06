@@ -12,6 +12,14 @@ grade: stable
 confinement: strict
 license: Apache-2.0
 
+plugs:
+  var-run:
+    interface: system-files
+    write:
+    - /var/run/bessd.pid
+    - /run/bessd.pid
+    - /run/dpdk
+
 apps:
   bessd:
     daemon: simple
@@ -20,8 +28,12 @@ apps:
     environment:
       LD_LIBRARY_PATH: "$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/local/lib/x86_64-linux-gnu:$SNAP/usr/local/lib"
     plugs:
+      - io-ports-control
+      - hardware-observe
+      - var-run
       - network-bind
       - network-control
+      - cpu-control
   routectl:
     daemon: simple
     install-mode: disable

@@ -6,4 +6,8 @@ set -ex
 export PYTHONPATH="$SNAP/opt/bess/:$PYTHONPATH"
 export CONF_FILE="$SNAP_COMMON/upf.json"
 
-$SNAP/bin/bessd -f -grpc-url=0.0.0.0:10514 -m 0
+if [ "$(jq -r '.mode' $SNAP_COMMON/upf.json)" == "dpdk" ]; then
+  $SNAP/bin/bessd -f -grpc-url=0.0.0.0:10514
+else
+  $SNAP/bin/bessd -f -grpc-url=0.0.0.0:10514 -m 0
+fi

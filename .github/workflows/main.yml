@@ -53,7 +53,7 @@ jobs:
         if: ${{ github.ref_name == 'main' }}
         with:
           snap: ${{ steps.find-snap.outputs.snap_file }}
-          release: 1.4/edge
+          release: 1.5/edge
 
       - name: Publish developer snap to branch
         uses: snapcore/action-publish@v1.2.0
@@ -62,4 +62,4 @@ jobs:
         if: ${{ (github.ref_name != 'main') && (github.event_name == 'push') }}
         with:
           snap: ${{ steps.find-snap.outputs.snap_file }}
-          release: 1.4/edge/${{ github.ref_name }}
+          release: 1.5/edge/${{ github.ref_name }}

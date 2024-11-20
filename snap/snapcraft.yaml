@@ -1,6 +1,6 @@
 name: sdcore-upf
-base: core22
-version: '1.4.0'
+base: core24
+version: '1.5.0'
 summary: SD-Core User Plane Function (UPF)
 description: |
   This project implements a 4G/5G User Plane Function (UPF) compliant with 3GPP TS23.501.
@@ -48,7 +48,7 @@ parts:
   xdp:
     plugin: autotools
     source: https://github.com/xdp-project/xdp-tools.git
-    source-tag: v1.2.2
+    source-tag: v1.4.3
     build-packages:
       - clang
       - gcc-multilib
@@ -65,7 +65,7 @@ parts:
       - xdp
     plugin: meson
     source: https://github.com/CloudNativeDataPlane/cndp.git
-    source-commit: d5ce4b9edc2e7ddb46a61b395deffafaf11a0500
+    source-tag: v24.07.0
     build-packages:
       - clang
       - golang
@@ -75,6 +75,7 @@ parts:
       - libnl-cli-3-dev
       - libnuma-dev
       - lld
+      - libxdp-dev
     meson-parameters:
       - -Dbuildtype=release
       - -Dmachine=haswell
@@ -92,7 +93,7 @@ parts:
     build-packages:
       - ca-certificates
       - libbenchmark-dev
-      - libbpf0
+      - libbpf1
       - libc-ares-dev
       - libelf-dev
       - libgflags2.2
@@ -127,12 +128,12 @@ parts:
     after:
       - dpdk
     source: https://github.com/omec-project/bess.git
-    source-commit: dc7ef58702b3013a0b149b113340082dfbdca7cd
+    source-commit: v1.0.1
     source-type: git
     build-packages:
       - ca-certificates
       - libbenchmark-dev
-      - libbpf0
+      - libbpf1
       - libc-ares-dev
       - libelf-dev
       - libgflags2.2
@@ -152,15 +153,15 @@ parts:
       - python3
     stage-packages:
       - libatomic1
-      - libbenchmark1
-      - libbpf0
+      - libbenchmark-dev
+      - libbpf1
       - libbsd0
       - libc-ares2
       - libelf1
       - libgflags2.2
-      - libgoogle-glog0v5
+      - libgoogle-glog0v6
       - libgraph-easy-perl
-      - libgrpc++1
+      - libgrpc++-dev
       - libjson-c5
       - libnl-3-200
       - libnl-cli-3-200
@@ -218,7 +219,7 @@ parts:
     after:
       - bess
     source: https://github.com/omec-project/upf.git
-    source-tag: v1.4.0
+    source-tag: v${CRAFT_PROJECT_VERSION}
     source-subdir: conf
     organize:
       "*": opt/bess/bessctl/conf/
@@ -236,7 +237,7 @@ parts:
   pfcpiface:
     plugin: go
     source: https://github.com/omec-project/upf.git
-    source-tag: v1.4.0
+    source-tag: v${CRAFT_PROJECT_VERSION}
     build-snaps:
       - go
     prime:
